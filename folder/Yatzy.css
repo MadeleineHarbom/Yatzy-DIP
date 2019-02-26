@@ -7,9 +7,9 @@ body {
 
 .grid-header {
     display: grid;
-    border: 1px solid blueviolet;
+
     padding: 20px;
-    width: 60%;
+    width: 400px;
     margin: 0 auto;
 
 }
@@ -20,7 +20,7 @@ img {
 
 .grid-terninger {
     display: grid;
-    border: 2px solid orangered;
+
     padding: 1px;
     grid-template-columns: auto auto auto auto auto;
 }
@@ -43,9 +43,9 @@ img {
 
 .grid-footer {
     display: grid;
-    border: 1px solid blueviolet;
+
     padding: 20px;
-    width: 60%;
+    width: 400px;
     margin: 0 auto;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
@@ -60,12 +60,18 @@ img {
 
 .col1 {
     grid-column: 1;
+    width: 130px;
+
 }
 
 
 .totals {
     display: grid;
 
+}
+
+.roll-names {
+    margin-left: 10px;
 }
 
 
