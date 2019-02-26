@@ -1,0 +1,72 @@
+body {
+    background-color: lightgoldenrodyellow;
+    margin: 0;
+    padding: 0;
+
+}
+
+.grid-header {
+    display: grid;
+    border: 1px solid blueviolet;
+    padding: 20px;
+    width: 60%;
+    margin: 0 auto;
+
+}
+
+img {
+    width: 30px;
+}
+
+.grid-terninger {
+    display: grid;
+    border: 2px solid orangered;
+    padding: 1px;
+    grid-template-columns: auto auto auto auto auto;
+}
+
+.die {
+    size: 100px;
+}
+
+.diehold img {
+    size: 100px;
+    opacity: 0.5;
+    background-color: blue;
+}
+
+.scorehold {
+    background-color: pink;
+}
+
+
+
+.grid-footer {
+    display: grid;
+    border: 1px solid blueviolet;
+    padding: 20px;
+    width: 60%;
+    margin: 0 auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+
+.grid-rolls button {
+    border-style: solid;
+    width: 100px;
+    height: 20px;
+    border-radius: 0;
+}
+
+.col1 {
+    grid-column: 1;
+}
+
+
+.totals {
+    display: grid;
+
+}
+
+
+
