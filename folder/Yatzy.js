@@ -2,6 +2,7 @@ let hold = [false, false, false, false, false];
 let values = [1, 1, 1, 1, 1]; //lave immutable
 let throwCount = 0;
 let frequency = [0, 0, 0, 0, 0, 0];
+let fillerCount = 15;
 
 scores = {
     1: null,
@@ -22,6 +23,22 @@ scores = {
     15: null,
     total: 0
 };
+
+function checkGameOver() {
+    if (fillerCount === 0) {
+        alert(`Game over! Your score is ${scores['total']}`);
+    }
+}
+
+function postTurn() {
+    fillerCount--;
+    updateTotal();
+    checkGameOver();
+    throwCount = 0;
+    checkForBonus();
+    unholdDice();
+}
+
 
 let faceimgs = ["../pics/die1.png", "../pics/die2.png", "../pics/die3.png",
     "../pics/die4.png", "../pics/die5.png", "../pics/die6.png"];
@@ -46,6 +63,12 @@ let rollbutton = document.getElementById("rollbtn");
 rollbutton.onclick = throwDice;
 addButtonFunctions();
 
+function unholdDice(){
+    dice.forEach((die) => {
+        die.className = "die";
+    });
+    hold = [false, false, false, false, false];
+}
 
 function updateDice() {
     for (let i = 0; i < 5; i++) {
@@ -88,7 +111,7 @@ function updateScores() {
     }
     if (scores["12"] == null) {
         field = document.getElementById("formSS");
-        field.innerText = valueFullHouse();
+        field.innerText = valueSmallStraight();
     }
 
     if (scores["13"] == null) {
@@ -106,6 +129,11 @@ function updateScores() {
         field.innerText = valueYatzy();
     }
 
+    field = document.getElementById("total");
+    field.innerText = scores['total'];
+    field = document.getElementById('sum');
+    field.innerText = scores['sum'];
+
 
 }
 
@@ -114,8 +142,8 @@ function updateScores() {
 
 
 function throwDice() {
-    throwCount++;
-    if (throwCount <= 3) {
+
+    if (throwCount < 3) {
         for (let die = 0; die < values.length; die++) {
             if (hold[die] === false) {
                 values[die] = randomRoll();
@@ -124,10 +152,13 @@ function throwDice() {
         }
         updateDice(values);
         updateScores(values);
+        throwCount++;
+        document.getElementById('turnID').innerText = throwCount;
     }
     else {
         alert("Sav yo shit n roll");
     }
+
 
 }
 
@@ -141,26 +172,14 @@ function randomRoll() {
 
 }
 
-//Behoever jeg denne?
-function getThrowCount() {
-    return throwCount;
-}
 
-function resetThrowCount() {
-    throwCount = 0;
-}
 
-function getValues() {
-    return values;
-}
 
-function setValues(newvalues) {
-    values = newvalues;
-}
+
 
 
 function valueSpecificFace(face) {
-    // FIXME this is probably where the problem is
+
     let total = 0;
     for (let i = 0; i < values.length; i++) {
         if (values[i] == face) {
@@ -186,9 +205,9 @@ function freqFaceValue() {
 
 function valueManyOfAKind(n) {
     let place = 0;
-    for (let i = 1; i < frequency.length; i++) {
+    for (let i = 0; i < frequency.length; i++) {
         if (frequency[i] >= n) {
-            place = i;
+            place = i+1;
         }
     }
 
@@ -205,23 +224,6 @@ function howManyOfFace(n) {
     }
     return counter;
 
-}
-
-function getPossibleResults() {
-    let results = []; //15
-    for (let i = 0; i <= 5; i++) {
-        results[i] = valueSpecificFace(i + 1);
-    }
-    results[6] = this.valueOnePair();
-    results[7] = this.valueTwoPair();
-    results[8] = this.valueThree();
-    results[9] = this.valueFour();
-    results[10] = this.valueFullHouse();
-    results[11] = this.valueSmallStraight();
-    results[12] = this.valueLargeStraight();
-    results[13] = this.valueChance();
-    results[14] = this.valueYatzy();
-    return results;
 }
 
 
@@ -248,8 +250,8 @@ function valueChance() {
 
 function valueOnePair() {
     let sum = 0;
-    for (let i = 1; i < frequency.length; i++) {
-        if (frequency[i] >= 2) {
+    for (let i = 1; i <= frequency.length; i++) {
+        if (frequency[i-1] >= 2) {
             sum = i * 2;
         }
     }
@@ -262,8 +264,8 @@ function valueTwoPair() {
 
     let counter = 0;
     let sum = 0;
-    for (let i = 1; i < frequency.length; i++) {
-        if (frequency[i] >= 2) {
+    for (let i = 1; i <= frequency.length; i++) {
+        if (frequency[i-1] >= 2) {
             sum += (i * 2);
             counter++;
         }
@@ -286,12 +288,11 @@ function valueFour() {
     return sum;
 }
 
-function valueSmallStrqaight() {
-
+function valueSmallStraight() {
     let sum = 0;
     let small = true;
-    for (let i = 1; i < frequency.length - 1; i++) {
-        if (frequency[i] !== 1) {
+    for (let i = 1; i < frequency.length ; i++) {
+        if (frequency[i-1] !== 1) {
             small = false; //skall ikke denne taelle op?
         }
     }
@@ -305,9 +306,9 @@ function valueSmallStrqaight() {
 function valueLargeStraight() {
     let sum = 0;
     let large = true;
-    for (let i = 2; i < frequency.length - 2; i++) {
-        if (frequency[i] !== 1) {
-            large = false; //skal ikke denne ogsaa taelle op
+    for (let i = 2; i <= frequency.length; i++) {
+        if (frequency[i-1] !== 1) {
+            large = false;
         }
     }
     if (large === true) {
@@ -321,11 +322,11 @@ function valueFullHouse() {
     let sum = 0;
     let sum2 = 0;
     let sum3 = 0;
-    for (let i = 1; i < frequency.length; i++) {
-        if (frequency[i] === 2) {
+    for (let i = 1; i <= frequency.length; i++) {
+        if (frequency[i-1] === 2) {
             sum2 = (i * 2);
         }
-        else if (frequency[i] === 3) {
+        else if (frequency[i-1] === 3) {
             sum3 = (i * 3);
         }
 
@@ -348,12 +349,17 @@ for (let i = 0; i < 100; i++) {
 function setFormsSingles(number) {
     let form = document.getElementById(`form${number}`);
     form.onclick = () => {
-        if (throwCount !== 0) {
-            scores[`${number}`] = valueSpecificFace();
+        if (throwCount !== 0 && scores[`${number}`] === null) {
+            let s = valueSpecificFace(number);
+            scores[`${number}`] = s;
+            scores['sum'] += s;
+            scores['total'] += s;
+            document.getElementById('sum').innerText = scores['sum'];
             form.className = "result-form scorehold";
-            throwCount = 0;
+            postTurn();
         }
-        checkForBonus();
+
+
 
     };
 
@@ -363,12 +369,21 @@ function setFormsSingles(number) {
 
 function setFormRest(btn, name, func) {
     btn.onclick = () => {
-        let val = func();
-        scores[`${name}`] = val;
-        scores['total'] += val;
-        btn.className = "result-form scorehold";
-        throwCount = 0;
+        if (throwCount !== 0) {
+            let val = func();
+            scores[`${name}`] = val;
+            scores['total'] += val;
+            btn.className = "result-form scorehold";
+            postTurn();
+        }
+
+
     }
+}
+
+function updateTotal() {
+    let tot = document.getElementById('total');
+    tot.innerText = scores['total'];
 }
 
 
@@ -377,13 +392,13 @@ function addButtonFunctions() {
     for (let i = 1; i <= 6; i++) {
         setFormsSingles(i);
     }
-    //let button = document.getElementById("form1p");
+
     setFormRest(document.getElementById("form1p"), 7, valueOnePair);
     setFormRest(document.getElementById("form2p"), 8, valueTwoPair);
     setFormRest(document.getElementById("form3some"), 9, valueThree);
     setFormRest(document.getElementById("form4some"), 10, valueFour);
     setFormRest(document.getElementById("formFullHouse"), 11, valueFullHouse);
-    setFormRest(document.getElementById("formSS"), 12, valueSmallStrqaight);
+    setFormRest(document.getElementById("formSS"), 12, valueSmallStraight);
     setFormRest(document.getElementById("formLS"), 13, valueLargeStraight);
     setFormRest(document.getElementById("formChance"), 14, valueChance);
     setFormRest(document.getElementById("formYatzi"), 15, valueYatzy);
@@ -391,7 +406,7 @@ function addButtonFunctions() {
 
 function checkForBonus() {
     if (scores['bonus'] !==  null) {
-        if (scores['sum'] > 50) {
+        if (scores['sum'] >= 63) {
             scores['bonus'] = 50;
             let button = document.getElementById("bonus");
             button.innerText = scores['bonus'];
