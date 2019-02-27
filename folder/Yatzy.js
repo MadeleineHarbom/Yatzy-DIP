@@ -45,23 +45,29 @@ let faceimgs = ["../pics/die1.png", "../pics/die2.png", "../pics/die3.png",
 let dice = document.querySelectorAll(".die");
 
 
-for (let i = 0; i < 5; i++) {
-    dice[i].firstChild.src = faceimgs[i];
-    dice[i].onclick = () => {
-        hold[i] = !hold[i];
-        if (hold[i]) {
-            dice[i].className = "diehold";
 
-        }
-        else {
-            dice[i].className = "die";
-        }
-    }
-}
 
+
+setDiceStart();
 let rollbutton = document.getElementById("rollbtn");
 rollbutton.onclick = throwDice;
 addButtonFunctions();
+
+function setDiceStart() {
+    for (let i = 0; i < 5; i++) {
+        dice[i].firstChild.src = faceimgs[i];
+        dice[i].onclick = () => {
+            hold[i] = !hold[i];
+            if (hold[i]) {
+                dice[i].className = "diehold";
+
+            }
+            else {
+                dice[i].className = "die";
+            }
+        }
+    }
+}
 
 function unholdDice(){
     dice.forEach((die) => {
