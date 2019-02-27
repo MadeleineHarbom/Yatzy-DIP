@@ -1,5 +1,3 @@
-//TODO fillercount og gameover virker ikke som det skal
-
 let hold = [false, false, false, false, false];
 let values = [1, 1, 1, 1, 1];
 let throwCount = 0;
@@ -360,7 +358,6 @@ function valueLargeStraight() {
 }
 
 function valueFullHouse() {
-
     let sum = 0;
     let sum2 = 0;
     let sum3 = 0;
@@ -378,8 +375,6 @@ function valueFullHouse() {
     }
     return sum;
 }
-
-
 
 
 //result button functions
@@ -418,8 +413,6 @@ function setFormRest(btn, name, func) {
 
     }
 }
-
-
 
 function addButtonFunctions() {
     for (let i = 1; i <= 6; i++) {
