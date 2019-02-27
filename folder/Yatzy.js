@@ -1,5 +1,5 @@
 let hold = [false, false, false, false, false];
-let values = [1, 1, 1, 1, 1]; //lave immutable
+let values = [1, 1, 1, 1, 1];
 let throwCount = 0;
 let frequency = [0, 0, 0, 0, 0, 0];
 let fillerCount = 15;
@@ -137,8 +137,24 @@ function updateScores() {
 
 }
 
+function updateTotal() {
+    let tot = document.getElementById('total');
+    tot.innerText = scores['total'];
+}
 
-//-------- skal nokm vaere i nyt dokument
+function checkForBonus() {
+    if (scores['bonus'] !==  null) {
+        if (scores['sum'] >= 63) {
+            scores['bonus'] = 50;
+            let button = document.getElementById("bonus");
+            button.innerText = scores['bonus'];
+        }
+
+    }
+
+}
+
+
 
 
 function throwDice() {
@@ -156,7 +172,7 @@ function throwDice() {
         document.getElementById('turnID').innerText = throwCount;
     }
     else {
-        alert("Sav yo shit n roll");
+        alert("You are out of turns. Please save your results");
     }
 
 
@@ -176,7 +192,7 @@ function randomRoll() {
 
 
 
-
+//----- Resultat beregninger
 
 function valueSpecificFace(face) {
 
@@ -215,16 +231,7 @@ function valueManyOfAKind(n) {
     return sum;
 }
 
-function howManyOfFace(n) {
-    let counter = 0;
-    for (let i = 0; i < values.length; i++) {
-        if (values[i] === n) {
-            counter++;
-        }
-    }
-    return counter;
 
-}
 
 
 function valueYatzy() {
@@ -338,14 +345,9 @@ function valueFullHouse() {
 }
 
 
-//Diecheck
-for (let i = 0; i < 100; i++) {
-    randomRoll();
-}
-
-//result button functins
 
 
+//result button functions
 function setFormsSingles(number) {
     let form = document.getElementById(`form${number}`);
     form.onclick = () => {
@@ -366,7 +368,6 @@ function setFormsSingles(number) {
 
 }
 
-
 function setFormRest(btn, name, func) {
     btn.onclick = () => {
         if (throwCount !== 0) {
@@ -381,13 +382,8 @@ function setFormRest(btn, name, func) {
     }
 }
 
-function updateTotal() {
-    let tot = document.getElementById('total');
-    tot.innerText = scores['total'];
-}
 
 
-//----test-----
 function addButtonFunctions() {
     for (let i = 1; i <= 6; i++) {
         setFormsSingles(i);
@@ -404,17 +400,7 @@ function addButtonFunctions() {
     setFormRest(document.getElementById("formYatzi"), 15, valueYatzy);
 }
 
-function checkForBonus() {
-    if (scores['bonus'] !==  null) {
-        if (scores['sum'] >= 63) {
-            scores['bonus'] = 50;
-            let button = document.getElementById("bonus");
-            button.innerText = scores['bonus'];
-        }
 
-    }
-
-}
 
 
 
