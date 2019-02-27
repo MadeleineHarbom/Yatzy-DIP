@@ -1,3 +1,5 @@
+//TODO fillercount og gameover virker ikke som det skal
+
 let hold = [false, false, false, false, false];
 let values = [1, 1, 1, 1, 1];
 let throwCount = 0;
@@ -12,6 +14,7 @@ scores = {
     5: null,
     6: null,
     sum: 0,
+    bonus: 0,
     7: null,
     8: null,
     9: null,
@@ -24,34 +27,60 @@ scores = {
     total: 0
 };
 
-function checkGameOver() {
-    if (fillerCount === 0) {
-        alert(`Game over! Your score is ${scores['total']}`);
-    }
-}
-
-function postTurn() {
-    fillerCount--;
-    updateTotal();
-    checkGameOver();
-    throwCount = 0;
-    checkForBonus();
-    unholdDice();
-}
-
 
 let faceimgs = ["../pics/die1.png", "../pics/die2.png", "../pics/die3.png",
     "../pics/die4.png", "../pics/die5.png", "../pics/die6.png"];
 let dice = document.querySelectorAll(".die");
 
-
-
-
-
 setDiceStart();
 let rollbutton = document.getElementById("rollbtn");
 rollbutton.onclick = throwDice;
 addButtonFunctions();
+
+function checkGameOver() {
+    console.log("check GM");
+    if (fillerCount === 0) {
+        alert(`Game over! Your score is ${scores['total']}`);
+        resetGame();
+    }
+}
+
+function postTurn() {
+    fillerCount--;
+    console.log(fillerCount);
+    checkGameOver();
+    updateTotal();
+    throwCount = 0;
+    checkForBonus();
+    unholdDice();
+
+}
+
+function resetGame() {
+    for (let i = 1; i <= 15; i++) {
+        scores[`${i}`] = null;
+    }
+    scores['bonus'] = 0;
+    scores['total'] = 0;
+    scores['sum'] = null;
+    hold = [false, false, false, false, false];
+    values = [1, 1, 1, 1, 1];
+    throwCount = 0;
+    frequency = [0, 0, 0, 0, 0, 0];
+    fillerCount = 15;
+    resetScores();
+    setDiceStart();
+}
+
+function resetScores() {
+    let buttons =document.querySelector(".grid-footer").querySelectorAll(".result-form");
+    buttons.forEach((button) => {
+        button.innerText = 0;
+    })
+    document.getElementById("bonus").innerText = 0;
+}
+
+
 
 function setDiceStart() {
     for (let i = 0; i < 5; i++) {
@@ -154,6 +183,8 @@ function checkForBonus() {
             scores['bonus'] = 50;
             let button = document.getElementById("bonus");
             button.innerText = scores['bonus'];
+            scores['total'] += 50;
+
         }
 
     }
@@ -189,7 +220,6 @@ function randomRoll() {
     let min = 1;
     let max = 7;
     let random = Math.floor(Math.random() * (+max - +min)) + +min; //make pretty
-    console.log("Random Number Generated : " + random); //for debuggy stuff, delete me
     return random;
 
 }
@@ -222,7 +252,6 @@ function freqFaceValue() {
             }
         }
     }
-    console.log(frequency);
 }
 
 function valueManyOfAKind(n) {
@@ -364,6 +393,7 @@ function setFormsSingles(number) {
             scores['total'] += s;
             document.getElementById('sum').innerText = scores['sum'];
             form.className = "result-form scorehold";
+
             postTurn();
         }
 
@@ -376,11 +406,12 @@ function setFormsSingles(number) {
 
 function setFormRest(btn, name, func) {
     btn.onclick = () => {
-        if (throwCount !== 0) {
+        if (throwCount !== 0 && scores[`${name}`] === null) {
             let val = func();
             scores[`${name}`] = val;
             scores['total'] += val;
             btn.className = "result-form scorehold";
+
             postTurn();
         }
 
